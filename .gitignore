@@ -1,2 +1,6 @@
 *.out
 *.exe
+
+# MNIST
+mnist/data/
+mnist/venv/
