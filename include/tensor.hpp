@@ -2,11 +2,14 @@
 #define TENSOR_HPP
 
 #include <vector>
+#include <string>
 
 class Tensor {
 public:
     Tensor() = default;
     Tensor(std::vector<float> data, std::vector<int> shape);
+
+    Tensor(const std::string& filename);
 
     const std::vector<float>& data() const;
     std::vector<float>& data();

@@ -1,9 +1,32 @@
 #include "../include/tensor.hpp"
 #include <iostream>
+#include <fstream>
 #include <stdexcept>
 
 Tensor::Tensor(std::vector<float> data, std::vector<int> shape)
     : data_(std::move(data)), shape_(std::move(shape)) {}
+
+Tensor::Tensor(const std::string& filename) {
+    std::ifstream file(filename, std::ios::binary);
+    if (!file)
+        throw std::runtime_error("Cannot open file: " + filename);
+    
+    int ndim;
+    file.read(reinterpret_cast<char*>(&ndim), sizeof(int));
+    
+    shape_.resize(ndim);
+    file.read(reinterpret_cast<char*>(shape_.data()), ndim * sizeof(int));
+    
+    int total_size = 1;
+    for (int dim : shape_) {
+        total_size *= dim;
+    }
+    
+    data_.resize(total_size);
+    file.read(reinterpret_cast<char*>(data_.data()), total_size * sizeof(float));
+    
+    file.close();
+}
 
 const std::vector<float>& Tensor::data() const { return data_; }
 
@@ -16,7 +39,7 @@ int Tensor::ndim() const { return shape_.size(); }
 int Tensor::size() const { return data_.size(); }
 
 void Tensor::reshape(const std::vector<int>& new_shape) {
-    int prod = 1;
+	int prod = 1;
     for (int d : new_shape) prod *= d;
     if (prod != size())
         throw std::runtime_error("reshape: size mismatch");
