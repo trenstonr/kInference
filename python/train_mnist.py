@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as F
 from torchvision import datasets, transforms
 import numpy as np
 import struct
@@ -82,6 +83,8 @@ for i in range(10):
     save_binary(f'exported_data/test_image_{i}.bin', img)
     with torch.no_grad():
         out = model(images[i:i+1])
+        # Apply softmax to convert logits to probabilities
+        out = F.softmax(out, dim=1)
     save_binary(f'exported_data/expected_output_{i}.bin', out.numpy())
 
 print("done")
