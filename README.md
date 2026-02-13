@@ -67,14 +67,6 @@ Test Image 0:
   Expected:   0.0001 0.0000 0.0012 0.9985 0.0000 0.0001 0.0000 0.0000 0.0001 0.0000
 ```
 
-## Current Limitations
-
-- Hard-coded 2-layer FC architecture (784→128→10)
-- MNIST dataset only
-- Network structure changes require code modification
-- CPU-only, no GPU acceleration
-- No support for convolutional, pooling, or recurrent layers
-
 ## Roadmap
 
 ### CUDA Acceleration
