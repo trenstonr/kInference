@@ -55,7 +55,7 @@ This creates `exported_data/` with weight matrices, bias vectors, test images, a
 Compile and run the C++ inference:
 
 ```bash
-g++ -std=c++17 main.cpp src/tensor.cpp src/engine.cpp src/inferencer.cpp -I./include -o inference_engine
+g++ -std=c++17 main.cpp src/* -I./include -o inference_engine
 ./inference_engine
 ```
 
