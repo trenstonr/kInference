@@ -2,18 +2,27 @@
 #define INFERENCER_HPP
 
 #include "tensor.hpp"
+#include <vector>
+#include <string>
 
 class Inferencer {
 public:
-    Inferencer();
+    // Inferencer();
+    
+    Inferencer(const std::vector<std::string>& weights_paths, 
+               const std::vector<std::string>& bias_paths);
 
     Tensor infer(const Tensor& image);
+    
+    int getNumLayers() const;
 
 private:
-    Tensor fc1_weight;
-    Tensor fc1_bias;
-    Tensor fc2_weight;
-    Tensor fc2_bias;
+    struct Layer {
+        Tensor weight;
+        Tensor bias;
+    };
+    
+    std::vector<Layer> layers;
 };
 
 #endif

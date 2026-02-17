@@ -5,8 +5,22 @@
 #include <iomanip>
 
 int main() {
-    // Create inferencer (loads weights and biases)
-    Inferencer inferencer;
+    // Example: 3-layer network with custom weights/biases
+    
+    std::vector<std::string> weights = {
+        "exported_data/weights_fc1_weight.bin",
+        "exported_data/weights_fc1_weight.bin", // duplicate to test differing number of layers
+        "exported_data/weights_fc2_weight.bin"
+    };
+    std::vector<std::string> biases = {
+        "exported_data/weights_fc1_bias.bin",
+        "exported_data/weights_fc1_weight.bin",
+        "exported_data/weights_fc2_bias.bin"
+    };
+    
+    Inferencer inferencer(weights, biases);
+    
+    std::cout << "Network has " << inferencer.getNumLayers() << " layers\n\n";
     
     // Load and run inference on test image 0
     Tensor image("exported_data/test_image_0.bin");

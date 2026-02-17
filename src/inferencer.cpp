@@ -1,25 +1,67 @@
 #include "../include/inferencer.hpp"
 #include "../include/engine.hpp"
+#include <stdexcept>
 
-Inferencer::Inferencer() {
-    fc1_weight = Tensor("exported_data/weights_fc1_weight.bin");
-    fc1_bias = Tensor("exported_data/weights_fc1_bias.bin");
-    fc2_weight = Tensor("exported_data/weights_fc2_weight.bin");
-    fc2_bias = Tensor("exported_data/weights_fc2_bias.bin");
+// Inferencer::Inferencer() {
+//     // Default constructor: load the 2-layer network from exported_data
+//     std::vector<std::string> weights = {
+//         "exported_data/weights_fc1_weight.bin",
+//         "exported_data/weights_fc2_weight.bin"
+//     };
+//     std::vector<std::string> biases = {
+//         "exported_data/weights_fc1_bias.bin",
+//         "exported_data/weights_fc2_bias.bin"
+//     };
+    
+//     // Initialize with default paths
+//     for (size_t i = 0; i < weights.size(); ++i) {
+//         Layer layer;
+//         layer.weight = Tensor(weights[i]);
+//         layer.bias = Tensor(biases[i]);
+//         layers.push_back(layer);
+//     }
+// }
+
+Inferencer::Inferencer(const std::vector<std::string>& weights_paths, const std::vector<std::string>& bias_paths) {
+    if (weights_paths.size() != bias_paths.size()) {
+        throw std::runtime_error("Number of weight and bias paths must match");
+    }
+    
+    // Load all layers
+    for (size_t i = 0; i < weights_paths.size(); ++i) {
+        Layer layer;
+        layer.weight = Tensor(weights_paths[i]);
+        layer.bias = Tensor(bias_paths[i]);
+        layers.push_back(layer);
+    }
 }
 
 Tensor Inferencer::infer(const Tensor& image) {
-    // First layer: matmul + bias + relu
-    Tensor hidden = Engine::matmul(image, fc1_weight);
-    Tensor bias1 = Tensor(fc1_bias.data(), {1, fc1_bias.shape()[0]}); // reshape bias from [x] to [1, x]
-    hidden = Engine::add(hidden, bias1);
-    hidden = Engine::relu(hidden);
+    Tensor current = image;
     
-    // Second layer: matmul + bias + softmax
-    Tensor output = Engine::matmul(hidden, fc2_weight);
-    Tensor bias2 = Tensor(fc2_bias.data(), {1, fc2_bias.shape()[0]});
-    output = Engine::add(output, bias2);
-    output = Engine::softmax(output);
+    // Process through each layer
+    for (size_t i = 0; i < layers.size(); ++i) {
+        const auto& layer = layers[i];
+        bool is_last_layer = (i == layers.size() - 1);
+        
+        // Matrix multiplication with weight
+        current = Engine::matmul(current, layer.weight);
+        
+        // Reshape bias if needed and add it
+        Tensor bias = Tensor(layer.bias.data(), {1, layer.bias.shape()[0]});
+        current = Engine::add(current, bias);
+        
+        // Apply activation: relu for hidden layers, softmax for output layer
+        if (is_last_layer) {
+            current = Engine::softmax(current);
+        } else {
+            current = Engine::relu(current);
+        }
+    }
     
-    return output;
+    return current;
+}
+
+int Inferencer::getNumLayers() const {
+    return layers.size();
 }

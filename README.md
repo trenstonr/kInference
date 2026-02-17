@@ -4,7 +4,7 @@ A lightweight neural network inference engine written in C++ for deployment on e
 
 ## Overview
 
-Custom inference engine for deploying PyTorch models in C++. Currently implements a 2-layer fully connected network (784→128→10) trained on MNIST, with plans for CUDA acceleration and generalized architecture support.
+Custom inference engine for deploying PyTorch models in C++. Supports arbitrary multilayer fully connected networks with automatic activation configuration.
 
 ## Architecture
 
@@ -19,9 +19,10 @@ Custom inference engine for deploying PyTorch models in C++. Currently implement
 - Core computational primitives
 
 ### Inferencer Class (`include/inferencer.hpp`, `src/inferencer.cpp`)
-- Implements 2-layer FC network: FC→ReLU→FC→Softmax
-- Loads MNIST model weights from binary files
-- Executes forward pass
+- Supports arbitrary number of fully connected layers
+- Automatic activation configuration: ReLU for hidden layers, Softmax for output
+- Loads weights and biases from binary files
+- Executes forward pass through all layers
 
 ## Project Structure
 
@@ -75,7 +76,7 @@ Test Image 0:
 - Performance benchmarking vs PyTorch
 
 ### Architecture Generalization
-- Dynamic layer configuration
+- ✓ Dynamic multilayer fully connected networks
 - Convolutional and recurrent layer support
 - Generalized weight loading from arbitrary PyTorch models
 - Automated model architecture export
