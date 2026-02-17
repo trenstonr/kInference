@@ -1,5 +1,8 @@
+*.o
 *.out
 *.exe
 *.bin
 
 python/data/
+
+exported_data_*

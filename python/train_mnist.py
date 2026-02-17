@@ -69,22 +69,22 @@ with torch.no_grad():
 print(f"accuracy: {100. * correct / len(test_data):.2f}%")
 
 
-os.makedirs('exported_data', exist_ok=True)
+os.makedirs('exported_data_mnist', exist_ok=True)
 
 print("exporting...")
-save_binary('exported_data/weights_fc1_weight.bin', model.fc1.weight.data.numpy().T)
-save_binary('exported_data/weights_fc1_bias.bin', model.fc1.bias.data.numpy())
-save_binary('exported_data/weights_fc2_weight.bin', model.fc2.weight.data.numpy().T)
-save_binary('exported_data/weights_fc2_bias.bin', model.fc2.bias.data.numpy())
+save_binary('exported_data_mnist/weights_fc1_weight.bin', model.fc1.weight.data.numpy().T)
+save_binary('exported_data_mnist/weights_fc1_bias.bin', model.fc1.bias.data.numpy())
+save_binary('exported_data_mnist/weights_fc2_weight.bin', model.fc2.weight.data.numpy().T)
+save_binary('exported_data_mnist/weights_fc2_bias.bin', model.fc2.bias.data.numpy())
 
 images, labels = next(iter(test_loader))
 for i in range(10):
     img = images[i:i+1].numpy().reshape(1, 784)
-    save_binary(f'exported_data/test_image_{i}.bin', img)
+    save_binary(f'exported_data_mnist/test_image_{i}.bin', img)
     with torch.no_grad():
         out = model(images[i:i+1])
         # Apply softmax to convert logits to probabilities
         out = F.softmax(out, dim=1)
-    save_binary(f'exported_data/expected_output_{i}.bin', out.numpy())
+    save_binary(f'exported_data_mnist/expected_output_{i}.bin', out.numpy())
 
 print("done")

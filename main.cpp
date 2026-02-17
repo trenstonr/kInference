@@ -5,26 +5,27 @@
 #include <iomanip>
 
 int main() {
-    // Example: 3-layer network with custom weights/biases
-    
+    // Example: 3-layer CIFAR-10 network (3072 -> 256 -> 128 -> 10)
+    // Activations: relu, relu, softmax
+
     std::vector<std::string> weights = {
-        "exported_data/weights_fc1_weight.bin",
-        "exported_data/weights_fc1_weight.bin", // duplicate to test differing number of layers
-        "exported_data/weights_fc2_weight.bin"
+        "exported_data_cifar10/weights_fc1_weight.bin",
+        "exported_data_cifar10/weights_fc2_weight.bin",
+        "exported_data_cifar10/weights_fc3_weight.bin"
     };
     std::vector<std::string> biases = {
-        "exported_data/weights_fc1_bias.bin",
-        "exported_data/weights_fc1_weight.bin",
-        "exported_data/weights_fc2_bias.bin"
+        "exported_data_cifar10/weights_fc1_bias.bin",
+        "exported_data_cifar10/weights_fc2_bias.bin",
+        "exported_data_cifar10/weights_fc3_bias.bin"
     };
     
     Inferencer inferencer(weights, biases);
     
-    std::cout << "Network has " << inferencer.getNumLayers() << " layers\n\n";
+    std::cout << "CIFAR-10 Network has " << inferencer.getNumLayers() << " layers\n\n";
     
     // Load and run inference on test image 0
-    Tensor image("exported_data/test_image_0.bin");
-    Tensor expected("exported_data/expected_output_0.bin");
+    Tensor image("exported_data_cifar10/test_image_0.bin");
+    Tensor expected("exported_data_cifar10/expected_output_0.bin");
     
     // Run inference
     Tensor prediction = inferencer.infer(image);

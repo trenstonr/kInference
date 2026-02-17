@@ -16,7 +16,6 @@ Custom inference engine for deploying PyTorch models in C++. Supports arbitrary 
 ### Engine Class (`include/engine.hpp`, `src/engine.cpp`)
 - Matrix operations: matmul, element-wise add/multiply
 - Activation functions: ReLU, Sigmoid, Softmax
-- Core computational primitives
 
 ### Inferencer Class (`include/inferencer.hpp`, `src/inferencer.cpp`)
 - Supports arbitrary number of fully connected layers
@@ -37,35 +36,38 @@ Custom inference engine for deploying PyTorch models in C++. Supports arbitrary 
 │   ├── engine.cpp
 │   └── inferencer.cpp
 ├── python/
-│   └── train_mnist.py      # PyTorch script to export MNIST weights/data
-└── main.cpp                # Example MNIST inference
+│   ├── train_mnist.py      # PyTorch script: 2-layer network on MNIST (784→128→10)
+│   ├── train_cifar10.py    # PyTorch script: 3-layer network on CIFAR-10 (3072→256→128→10)
+└── main.cpp                # Example 3-layer CIFAR-10 inference
 ```
 
 ## Usage
 
-Train the MNIST model and export weights:
+### Example: CIFAR-10 with 3-layer Network (Default)
+
+Train and export the 3-layer CIFAR-10 model:
 
 ```bash
 cd python
-python train_mnist.py
+python3 train_cifar10.py
 cd ..
 ```
 
-This creates `exported_data/` with weight matrices, bias vectors, test images, and expected outputs.
+This creates `exported_data_cifar10/` with 3 sets of weights/biases, test images, and expected outputs.
 
 Compile and run the C++ inference:
 
 ```bash
-g++ -std=c++17 main.cpp src/* -I./include -o inference_engine
-./inference_engine
+g++ -std=c++17 main.cpp src/* -I./include -o k_infer
+./k_infer
 ```
 
 Example output:
 
 ```
 Test Image 0:
-  Prediction: 0.0001 0.0000 0.0012 0.9985 0.0000 0.0001 0.0000 0.0000 0.0001 0.0000
-  Expected:   0.0001 0.0000 0.0012 0.9985 0.0000 0.0001 0.0000 0.0000 0.0001 0.0000
+  Prediction: 0.0225 0.1576 0.0984 0.3352 0.0338 0.1224 0.0932 0.0374 0.0595 0.0400 
+  Expected:   0.0225 0.1576 0.0984 0.3352 0.0338 0.1224 0.0932 0.0374 0.0595 0.0400
 ```
 
 ## Roadmap
@@ -82,7 +84,8 @@ Test Image 0:
 - Automated model architecture export
 
 ### Advanced Features
+- ✓ Support for MNIST and CIFAR-10 datasets
+- Visualization tools for test data and predictions
 - PyTorch-to-inference validation pipeline
-- Testing on complex datasets beyond MNIST
 - Quantization (FP16, INT8)
 - Dynamic batch size support
