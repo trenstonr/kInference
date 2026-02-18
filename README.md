@@ -72,20 +72,16 @@ Test Image 0:
 
 ## Roadmap
 
-### CUDA Acceleration
-- CUDA kernel implementation for matrix operations
-- Optimized inference on Jetson TX2
-- Performance benchmarking vs PyTorch
+### In Scope
+- ✓ Basic neural networks with multiple layers
+- ✓ Tests with MNIST and CIFAR-10 datasets
+- GPU acceleration (CUDA)
+- Load models from ONNX format
+- Load models directly from PyTorch
+- Visualize C++ inference results with PyTorch
+- Process multiple images at once
 
-### Architecture Generalization
-- ✓ Dynamic multilayer fully connected networks
-- Convolutional and recurrent layer support
-- Generalized weight loading from arbitrary PyTorch models
-- Automated model architecture export
-
-### Advanced Features
-- ✓ Support for MNIST and CIFAR-10 datasets
-- Visualization tools for test data and predictions
-- PyTorch-to-inference validation pipeline
-- Quantization (FP16, INT8)
-- Dynamic batch size support
+### Out of Scope
+- Image-specific layer types (convolutional layers)
+- Sequence/text layer types (recurrent layers)
+- Model compression/optimization (quantization)
